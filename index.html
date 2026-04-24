@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Takeda R&D DD&T · AIDPA Working Session</title>
-
+<script>
+  // Immediately hide the page — before anything renders
+  if (sessionStorage.getItem('takeda_auth') !== '1') {
+    document.documentElement.style.visibility = 'hidden';
+  }
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1637,6 +1642,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (input.value === 'TAKACN0427') {
       sessionStorage.setItem('takeda_auth', '1');
       gate.style.display = 'none';
+      document.documentElement.style.visibility = 'visible';
     } else {
       error.textContent = 'Incorrect password. Please try again.';
       input.value = '';
@@ -1648,6 +1654,9 @@ window.addEventListener('DOMContentLoaded', () => {
   input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') attempt();
   });
+
+  // Show the gate and make page visible (gate covers everything)
+  document.documentElement.style.visibility = 'visible';
   input.focus();
 })();
 </script>
