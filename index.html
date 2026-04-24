@@ -4,56 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Takeda R&D DD&T · AIDPA Working Session</title>
-<script>
-(function() {
-  const CORRECT = 'TAKACN0427';
-  const SESSION_KEY = 'takeda_auth';
-  if (sessionStorage.getItem(SESSION_KEY) === 'true') return;
-  document.addEventListener('DOMContentLoaded', function() {
-    document.body.style.display = 'none';
-  });
-  const overlay = document.createElement('div');
-  overlay.id = 'pw-overlay';
-  overlay.style.cssText = [
-    'position:fixed','top:0','left:0','width:100%','height:100%',
-    'background:#f7f6f3','display:flex','align-items:center',
-    'justify-content:center','z-index:99999','font-family:DM Sans,sans-serif'
-  ].join(';');
-  overlay.innerHTML = `
-    <div style="text-align:center;max-width:360px;width:90%;padding:48px 40px;background:#fff;border:1px solid rgba(0,0,0,0.08);box-shadow:0 4px 32px rgba(0,0,0,0.06);">
-      <div style="font-family:serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8c8c86;margin-bottom:6px;">Takeda R&D DD&T</div>
-      <div style="font-family:'Georgia',serif;font-size:22px;font-weight:300;color:#1a1a18;margin-bottom:32px;line-height:1.3;">AIDPA Working Session</div>
-      <input id="pw-input" type="password" placeholder="Enter password"
-        style="width:100%;padding:11px 14px;border:1px solid rgba(0,0,0,0.15);background:#f7f6f3;font-size:14px;font-family:inherit;color:#1a1a18;outline:none;margin-bottom:10px;letter-spacing:.05em;"
-        onkeydown="if(event.key==='Enter')document.getElementById('pw-btn').click()" />
-      <div id="pw-error" style="font-size:12px;color:#c41e3a;min-height:18px;margin-bottom:10px;"></div>
-      <button id="pw-btn"
-        style="width:100%;padding:11px;background:#1a1a18;color:#fff;border:none;font-size:13px;font-family:inherit;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;"
-        onclick="
-          const val = document.getElementById('pw-input').value;
-          if(val === '${CORRECT}') {
-            sessionStorage.setItem('${SESSION_KEY}','true');
-            document.getElementById('pw-overlay').remove();
-            document.body.style.display='';
-          } else {
-            document.getElementById('pw-error').textContent='Incorrect password. Please try again.';
-            document.getElementById('pw-input').value='';
-            document.getElementById('pw-input').focus();
-          }
-        ">Enter</button>
-    </div>
-  `;
-  document.currentScript
-    ? document.currentScript.insertAdjacentElement('afterend', overlay)
-    : document.addEventListener('DOMContentLoaded', () => document.body.prepend(overlay));
-  document.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem(SESSION_KEY) !== 'true') {
-      document.body.style.display = 'none';
-      document.body.prepend(overlay);
-    }
-  });
-})();
-</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1614,6 +1565,91 @@ function startDiscussion() {
 window.addEventListener('DOMContentLoaded', () => {
   buildSelectionGrid('nicole-critical-grid', 'nicole', 'critical', 2);
 });
+</script>
+
+<!-- PASSWORD GATE -->
+<style>
+#pw-gate {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:#f7f6f3; z-index:99999;
+  display:flex; align-items:center; justify-content:center;
+}
+#pw-box {
+  text-align:center; max-width:360px; width:90%;
+  padding:48px 40px; background:#fff;
+  border:1px solid rgba(0,0,0,0.08);
+  box-shadow:0 4px 32px rgba(0,0,0,0.06);
+}
+#pw-eyebrow {
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:#8c8c86; margin-bottom:8px;
+}
+#pw-title {
+  font-family:'Cormorant Garamond',serif; font-size:24px;
+  font-weight:300; color:#1a1a18; margin-bottom:32px; line-height:1.3;
+}
+#pw-input {
+  width:100%; padding:11px 14px;
+  border:1px solid rgba(0,0,0,0.15); background:#f7f6f3;
+  font-size:14px; color:#1a1a18; outline:none;
+  margin-bottom:12px; font-family:'DM Sans',sans-serif;
+  box-sizing:border-box;
+}
+#pw-error {
+  font-size:12px; color:#c41e3a;
+  min-height:18px; margin-bottom:12px;
+  font-family:'DM Sans',sans-serif;
+}
+#pw-btn {
+  width:100%; padding:12px;
+  background:#1a1a18; color:#fff; border:none;
+  font-size:12px; font-family:'DM Sans',sans-serif;
+  letter-spacing:.1em; text-transform:uppercase;
+  cursor:pointer;
+}
+#pw-btn:hover { background:#c41e3a; }
+</style>
+
+<div id="pw-gate">
+  <div id="pw-box">
+    <div id="pw-eyebrow">Takeda R&amp;D DD&amp;T</div>
+    <div id="pw-title">AIDPA Working Session</div>
+    <input id="pw-input" type="password" placeholder="Enter password" />
+    <div id="pw-error"></div>
+    <button id="pw-btn">Enter</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var gate = document.getElementById('pw-gate');
+  var input = document.getElementById('pw-input');
+  var error = document.getElementById('pw-error');
+  var btn = document.getElementById('pw-btn');
+
+  if (sessionStorage.getItem('takeda_auth') === '1') {
+    gate.style.display = 'none';
+    return;
+  }
+
+  function attempt() {
+    if (input.value === 'TAKACN0427') {
+      sessionStorage.setItem('takeda_auth', '1');
+      gate.style.display = 'none';
+    } else {
+      error.textContent = 'Incorrect password. Please try again.';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') attempt();
+  });
+  input.focus();
+})();
 </script>
 </body>
 </html>
