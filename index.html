@@ -4,6 +4,56 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Takeda R&D DD&T · AIDPA Working Session</title>
+<script>
+(function() {
+  const CORRECT = 'TAKACN0427';
+  const SESSION_KEY = 'takeda_auth';
+  if (sessionStorage.getItem(SESSION_KEY) === 'true') return;
+  document.addEventListener('DOMContentLoaded', function() {
+    document.body.style.display = 'none';
+  });
+  const overlay = document.createElement('div');
+  overlay.id = 'pw-overlay';
+  overlay.style.cssText = [
+    'position:fixed','top:0','left:0','width:100%','height:100%',
+    'background:#f7f6f3','display:flex','align-items:center',
+    'justify-content:center','z-index:99999','font-family:DM Sans,sans-serif'
+  ].join(';');
+  overlay.innerHTML = `
+    <div style="text-align:center;max-width:360px;width:90%;padding:48px 40px;background:#fff;border:1px solid rgba(0,0,0,0.08);box-shadow:0 4px 32px rgba(0,0,0,0.06);">
+      <div style="font-family:serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8c8c86;margin-bottom:6px;">Takeda R&D DD&T</div>
+      <div style="font-family:'Georgia',serif;font-size:22px;font-weight:300;color:#1a1a18;margin-bottom:32px;line-height:1.3;">AIDPA Working Session</div>
+      <input id="pw-input" type="password" placeholder="Enter password"
+        style="width:100%;padding:11px 14px;border:1px solid rgba(0,0,0,0.15);background:#f7f6f3;font-size:14px;font-family:inherit;color:#1a1a18;outline:none;margin-bottom:10px;letter-spacing:.05em;"
+        onkeydown="if(event.key==='Enter')document.getElementById('pw-btn').click()" />
+      <div id="pw-error" style="font-size:12px;color:#c41e3a;min-height:18px;margin-bottom:10px;"></div>
+      <button id="pw-btn"
+        style="width:100%;padding:11px;background:#1a1a18;color:#fff;border:none;font-size:13px;font-family:inherit;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;"
+        onclick="
+          const val = document.getElementById('pw-input').value;
+          if(val === '${CORRECT}') {
+            sessionStorage.setItem('${SESSION_KEY}','true');
+            document.getElementById('pw-overlay').remove();
+            document.body.style.display='';
+          } else {
+            document.getElementById('pw-error').textContent='Incorrect password. Please try again.';
+            document.getElementById('pw-input').value='';
+            document.getElementById('pw-input').focus();
+          }
+        ">Enter</button>
+    </div>
+  `;
+  document.currentScript
+    ? document.currentScript.insertAdjacentElement('afterend', overlay)
+    : document.addEventListener('DOMContentLoaded', () => document.body.prepend(overlay));
+  document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem(SESSION_KEY) !== 'true') {
+      document.body.style.display = 'none';
+      document.body.prepend(overlay);
+    }
+  });
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -22,7 +72,7 @@
   --later: #6b7280;
   --sidebar-w: 210px;
 }
-
+ 
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body {
@@ -33,7 +83,7 @@ body {
   display:flex;
   min-height:100vh;
 }
-
+ 
 /* ── SIDEBAR ── */
 #sidebar {
   position:fixed; top:0; left:0; bottom:0;
@@ -91,10 +141,10 @@ body {
   font-size:10px; color:rgba(255,255,255,0.2);
   line-height:1.7; font-family:'DM Mono', monospace;
 }
-
+ 
 /* ── MAIN ── */
 #main { margin-left:var(--sidebar-w); flex:1; min-width:0; }
-
+ 
 /* ── HERO ── */
 #hero {
   background:var(--bg2);
@@ -130,7 +180,7 @@ body {
   color:var(--text-faint); margin-bottom:4px;
 }
 .hero-meta-val { font-size:14px; font-weight:500; color:var(--text); }
-
+ 
 /* ── OBJECTIVE ── */
 #objective {
   background:var(--bg);
@@ -160,7 +210,7 @@ body {
 }
 .obj-item p { font-size:13px; line-height:1.65; color:var(--text-dim); }
 .obj-item p strong { font-weight:500; color:var(--text); display:block; margin-bottom:1px; }
-
+ 
 /* ── SECTION WRAPPER ── */
 .ws-section { border-bottom:1px solid var(--border); }
 .ws-section-header { padding:52px 72px 36px; }
@@ -177,7 +227,7 @@ body {
 .ws-section-title em { font-style:italic; }
 .ws-section-purpose { font-size:13.5px; line-height:1.8; color:var(--text-dim); max-width:600px; }
 .ws-body { padding:0 72px 52px; display:flex; flex-direction:column; gap:12px; }
-
+ 
 /* ── SECTION COLORS ── */
 #s1 .ws-section-tag { color:var(--accent); }
 #s1 .ws-section-tag-dot { background:var(--accent); }
@@ -188,7 +238,7 @@ body {
 #s3 .ws-section-tag { color:var(--accent); }
 #s3 .ws-section-tag-dot { background:var(--accent); }
 #s3 .ws-section-title em { color:var(--accent); }
-
+ 
 /* ── CARD ── */
 .d-card {
   border:1px solid var(--border);
@@ -215,7 +265,7 @@ body {
 .d-card:hover .d-card-toggle { color:var(--text); }
 .d-card-body { display:none; border-top:1px solid var(--border); }
 .d-card-body.open { display:block; }
-
+ 
 /* ── GROUPING LAYOUT ── */
 .grouping { padding:28px 28px 24px; border-bottom:1px solid var(--border); }
 .grouping:last-child { border-bottom:none; }
@@ -225,7 +275,7 @@ body {
   color:var(--accent); margin-bottom:16px;
 }
 .grouping-inner { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-
+ 
 /* ── OBSERVATION BLOCK ── */
 .obs-block { display:flex; flex-direction:column; gap:6px; }
 .obs-block-label {
@@ -244,7 +294,7 @@ body {
   width:4px; height:4px; border-radius:50%;
   background:var(--accent); flex-shrink:0; margin-top:7px;
 }
-
+ 
 /* ── QUESTION BLOCK ── */
 .q-block { display:flex; flex-direction:column; gap:0; }
 .q-item {
@@ -258,7 +308,7 @@ body {
   min-width:16px; flex-shrink:0;
 }
 .q-item p { font-size:13px; line-height:1.6; color:var(--text-dim); }
-
+ 
 /* ── SYNTHESIS CARD (1.2) ── */
 .synthesis-card {
   background:var(--bg);
@@ -279,7 +329,7 @@ body {
 }
 .synthesis-item p { font-size:13px; line-height:1.7; color:var(--text-dim); }
 .synthesis-item p strong { font-weight:500; color:var(--text); }
-
+ 
 /* ── DIMENSION CARD (S2) ── */
 .dim-card {
   border:1px solid var(--border);
@@ -321,7 +371,7 @@ body {
   font-size:9px; letter-spacing:.18em; text-transform:uppercase;
   color:var(--text-faint); margin-bottom:10px;
 }
-
+ 
 /* ── SECTION DIVIDER ── */
 .section-divider {
   display:flex; align-items:center; gap:14px;
@@ -333,7 +383,7 @@ body {
   color:var(--text-faint); white-space:nowrap;
 }
 .section-divider-line { flex:1; height:1px; background:var(--border); }
-
+ 
 /* ── S3 NEXT STEPS ── */
 .next-steps-area {
   border:1px solid var(--border); background:var(--bg); overflow:hidden;
@@ -368,7 +418,7 @@ body {
 }
 .next-steps-table tbody td:last-child { border-right:none; }
 .next-steps-table tbody td.placeholder { color:var(--text-faint); font-style:italic; }
-
+ 
 footer {
   padding:24px 72px; border-top:1px solid var(--border);
   display:flex; align-items:center; justify-content:space-between;
@@ -379,11 +429,11 @@ footer p { font-size:11px; color:var(--text-faint); }
   font-family:'DM Mono', monospace;
   font-size:10px; letter-spacing:.1em; color:var(--text-faint);
 }
-
+ 
 ::-webkit-scrollbar { width:3px; }
 ::-webkit-scrollbar-track { background:var(--bg); }
 ::-webkit-scrollbar-thumb { background:var(--accent); }
-
+ 
 /* ── FROM → TO STRIP ── */
 .fromto-strip {
   margin-top:28px;
@@ -441,16 +491,16 @@ footer p { font-size:11px; color:var(--text-faint); }
   font-size:10px;
   margin:0 6px;
 }
-
+ 
 /* ── S3 JOURNEY VISUAL ── */
 .journey-wrap { padding:0 72px 52px; }
-
+ 
 /* Single unified outer border wrapping ALL rows */
 .journey-outer {
   border:1px solid var(--border-hi);
   overflow:hidden;
 }
-
+ 
 /* Phase header — includes a spacer matching the 36px label col */
 .phase-header-row {
   display:flex;
@@ -489,7 +539,7 @@ footer p { font-size:11px; color:var(--text-faint); }
 .phase-accent-bar {
   position:absolute; bottom:0; left:0; right:0; height:3px;
 }
-
+ 
 /* All content rows share the same flex row structure */
 .journey-row-wrap {
   display:flex; align-items:stretch;
@@ -514,11 +564,11 @@ footer p { font-size:11px; color:var(--text-faint); }
 }
 .label-contrib .journey-row-label-text { color:var(--accent); }
 .label-skills .journey-row-label-text { color:#4a5568; }
-
+ 
 /* Engagement curve */
 .curve-container { flex:1; background:var(--bg2); padding:10px 0 0; }
 .curve-svg { width:100%; display:block; }
-
+ 
 /* Contribution & Skills grids */
 .contrib-grid {
   flex:1;
@@ -526,7 +576,7 @@ footer p { font-size:11px; color:var(--text-faint); }
 }
 .contrib-row-label { display:none; }
 .contrib-row-badge { display:none; }
-
+ 
 .contrib-cell {
   padding:16px 18px;
   border-right:1px solid var(--border);
@@ -543,7 +593,7 @@ footer p { font-size:11px; color:var(--text-faint); }
 }
 .dot-contrib { background:var(--accent); }
 .dot-skills { background:#4a5568; }
-
+ 
 /* Foundation boxes */
 .foundation-section { margin-top:28px; }
 .foundation-label-row {
@@ -566,7 +616,7 @@ footer p { font-size:11px; color:var(--text-faint); }
 .legend-swatch { width:10px; height:10px; border-radius:1px; flex-shrink:0; }
 .legend-ddt { background:rgba(196,30,58,0.18); border:1px solid rgba(196,30,58,0.35); }
 .legend-ent { background:rgba(107,114,128,0.15); border:1px solid rgba(107,114,128,0.3); }
-
+ 
 .foundation-grid {
   display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
 }
@@ -600,7 +650,7 @@ footer p { font-size:11px; color:var(--text-faint); }
 .found-box-desc {
   font-size:10.5px; color:var(--text-faint); line-height:1.5;
 }
-
+ 
 /* Next steps embedded */
 .next-steps-embedded {
   margin-top:36px;
@@ -619,7 +669,7 @@ footer p { font-size:11px; color:var(--text-faint); }
   font-family:'DM Mono', monospace;
   font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--text-faint);
 }
-
+ 
 @media (max-width:1000px) {
   #sidebar { display:none; }
   #main { margin-left:0; }
@@ -628,7 +678,7 @@ footer p { font-size:11px; color:var(--text-faint); }
 </style>
 </head>
 <body>
-
+ 
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sb-brand">
@@ -646,10 +696,10 @@ footer p { font-size:11px; color:var(--text-faint); }
     <p>Sascha · Nicole<br>~2 hours · Confidential</p>
   </div>
 </nav>
-
+ 
 <!-- MAIN -->
 <div id="main">
-
+ 
   <!-- HERO -->
   <section id="hero">
     <div class="hero-eyebrow">
@@ -673,7 +723,7 @@ footer p { font-size:11px; color:var(--text-faint); }
       </div>
     </div>
   </section>
-
+ 
   <!-- OBJECTIVE -->
   <section id="objective">
     <div class="obj-inner">
@@ -697,7 +747,7 @@ footer p { font-size:11px; color:var(--text-faint); }
       </div>
     </div>
   </section>
-
+ 
   <!-- ── SECTION 1 ── -->
   <section id="s1" class="ws-section" style="background:var(--bg);">
     <div class="ws-section-header">
@@ -706,7 +756,7 @@ footer p { font-size:11px; color:var(--text-faint); }
       <p class="ws-section-purpose">We open by hearing your read first. Then we share three areas where we have observations and questions — offered as a prompt, not a verdict.</p>
     </div>
     <div class="ws-body">
-
+ 
       <!-- 1.1 Opening Remarks — always visible -->
       <div style="background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--accent); padding:28px 32px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
@@ -714,9 +764,9 @@ footer p { font-size:11px; color:var(--text-faint); }
           <span style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent);">Opening Remarks</span>
         </div>
         <p style="font-size:15px; font-family:'Cormorant Garamond',serif; font-weight:300; line-height:1.7; color:var(--text); margin-bottom:16px; max-width:700px; font-style:italic;">Before we share what we're seeing — what's your honest read on what's getting in the way right now? Where do you feel the most friction — is it the ambition, the strategy, the leadership commitment, or something else entirely?</p>
-
+ 
       </div>
-
+ 
       <!-- 1.2 Observation-Led Questions — collapsed by default -->
       <div class="d-card">
         <div class="d-card-header" onclick="toggleCard(this)">
@@ -730,7 +780,7 @@ footer p { font-size:11px; color:var(--text-faint); }
           <span class="d-card-toggle">EXPAND ↓</span>
         </div>
         <div class="d-card-body">
-
+ 
           <!-- Grouping 1: Ambition & Outcomes -->
           <div class="grouping">
             <div class="grouping-label">Ambition &amp; Outcomes</div>
@@ -749,7 +799,7 @@ footer p { font-size:11px; color:var(--text-faint); }
               </div>
             </div>
           </div>
-
+ 
           <!-- Grouping 2: Strategy & Prioritization -->
           <div class="grouping">
             <div class="grouping-label">Strategy &amp; Prioritization</div>
@@ -770,7 +820,7 @@ footer p { font-size:11px; color:var(--text-faint); }
               </div>
             </div>
           </div>
-
+ 
           <!-- Grouping 3: Leadership & Commitment -->
           <div class="grouping">
             <div class="grouping-label">Leadership &amp; Commitment</div>
@@ -791,13 +841,13 @@ footer p { font-size:11px; color:var(--text-faint); }
               </div>
             </div>
           </div>
-
+ 
         </div>
       </div>
-
+ 
     </div>
   </section>
-
+ 
   <!-- ── SECTION 2 ── -->
   <section id="s2" class="ws-section" style="background:var(--bg2);">
     <div class="ws-section-header">
@@ -806,10 +856,10 @@ footer p { font-size:11px; color:var(--text-faint); }
       <p class="ws-section-purpose">Six dimensions determine whether a transformation of this scale succeeds. Before we discuss them — tell us how you see it. Your answers will shape the order we go through them.</p>
     </div>
     <div class="ws-body">
-
+ 
       <!-- ── RANKING ENGINE ── -->
       <div id="ranking-engine" style="background:var(--bg); border:1px solid var(--border); padding:36px 40px 32px;">
-
+ 
         <!-- Step indicator -->
         <div id="rank-step-indicator" style="display:flex; gap:8px; margin-bottom:28px; align-items:center;">
           <div id="step-dot-1" style="width:6px;height:6px;border-radius:50%;background:var(--accent);"></div>
@@ -817,7 +867,7 @@ footer p { font-size:11px; color:var(--text-faint); }
           <div id="step-dot-3" style="width:6px;height:6px;border-radius:50%;background:var(--border-hi);"></div>
           <span id="step-label" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);margin-left:6px;">Step 1 of 3</span>
         </div>
-
+ 
         <!-- Step 1: Nicole critical -->
         <div id="rank-step-1">
           <div style="margin-bottom:20px;">
@@ -828,7 +878,7 @@ footer p { font-size:11px; color:var(--text-faint); }
           <div id="nicole-critical-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;"></div>
           <button onclick="advanceStep(1,'nicole','critical')" id="btn-step-1" style="display:none;background:var(--accent);color:#fff;border:none;padding:10px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.03em;">Next →</button>
         </div>
-
+ 
         <!-- Step 2: Sascha critical -->
         <div id="rank-step-2" style="display:none;">
           <div style="margin-bottom:20px;">
@@ -839,7 +889,7 @@ footer p { font-size:11px; color:var(--text-faint); }
           <div id="sascha-critical-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;"></div>
           <button onclick="advanceStep(2,'sascha','critical')" id="btn-step-2" style="display:none;background:var(--accent);color:#fff;border:none;padding:10px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.03em;">Next →</button>
         </div>
-
+ 
         <!-- Step 3: Both confidence -->
         <div id="rank-step-3" style="display:none;">
           <div style="margin-bottom:24px;">
@@ -858,7 +908,7 @@ footer p { font-size:11px; color:var(--text-faint); }
           </div>
           <button onclick="revealResults()" id="btn-step-3" style="display:none;background:var(--accent);color:#fff;border:none;padding:10px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.03em;">Reveal &amp; Reorder →</button>
         </div>
-
+ 
         <!-- Results summary -->
         <div id="rank-results" style="display:none;">
           <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Your Read · Summary</div>
@@ -866,12 +916,12 @@ footer p { font-size:11px; color:var(--text-faint); }
           <div id="alignment-note" style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.7;color:var(--text-dim);"></div>
           <button onclick="startDiscussion()" style="background:var(--accent);color:#fff;border:none;padding:10px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.03em;">Start Discussion ↓</button>
         </div>
-
+ 
       </div>
-
+ 
       <!-- ── DIMENSION CARDS (dynamically reordered) ── -->
       <div id="dim-cards-container" style="display:none; display:flex; flex-direction:column; gap:12px; margin-top:4px;">
-
+ 
         <div class="dim-card" data-dim="0">
           <div class="dim-card-header" onclick="toggleDim(this)">
             <div class="dim-card-header-left">
@@ -911,7 +961,7 @@ footer p { font-size:11px; color:var(--text-faint); }
             </div>
           </div>
         </div>
-
+ 
         <div class="dim-card" data-dim="1">
           <div class="dim-card-header" onclick="toggleDim(this)">
             <div class="dim-card-header-left">
@@ -951,7 +1001,7 @@ footer p { font-size:11px; color:var(--text-faint); }
             </div>
           </div>
         </div>
-
+ 
         <div class="dim-card" data-dim="2">
           <div class="dim-card-header" onclick="toggleDim(this)">
             <div class="dim-card-header-left">
@@ -991,7 +1041,7 @@ footer p { font-size:11px; color:var(--text-faint); }
             </div>
           </div>
         </div>
-
+ 
         <div class="dim-card" data-dim="3">
           <div class="dim-card-header" onclick="toggleDim(this)">
             <div class="dim-card-header-left">
@@ -1031,7 +1081,7 @@ footer p { font-size:11px; color:var(--text-faint); }
             </div>
           </div>
         </div>
-
+ 
         <div class="dim-card" data-dim="4">
           <div class="dim-card-header" onclick="toggleDim(this)">
             <div class="dim-card-header-left">
@@ -1071,7 +1121,7 @@ footer p { font-size:11px; color:var(--text-faint); }
             </div>
           </div>
         </div>
-
+ 
         <div class="dim-card" data-dim="5">
           <div class="dim-card-header" onclick="toggleDim(this)">
             <div class="dim-card-header-left">
@@ -1111,12 +1161,12 @@ footer p { font-size:11px; color:var(--text-faint); }
             </div>
           </div>
         </div>
-
+ 
       </div><!-- /dim-cards-container -->
-
+ 
     </div>
   </section>
-
+ 
   <!-- ── SECTION 3 ── -->
   <section id="s3" class="ws-section" style="background:var(--bg);">
     <div class="ws-section-header">
@@ -1124,11 +1174,11 @@ footer p { font-size:11px; color:var(--text-faint); }
       <h2 class="ws-section-title">How DD&T needs to<br><em>evolve to sustain and scale</em></h2>
       <p class="ws-section-purpose">AIDPA will only scale if DD&T is willing to change — not just what it builds, but how it operates, where it leads, and who it holds itself accountable to.</p>
     </div>
-
+ 
     <div class="journey-wrap">
-
+ 
       <div class="journey-outer">
-
+ 
       <!-- Phase header row -->
       <div class="phase-header-row">
         <div class="phase-header-spacer"></div>
@@ -1159,18 +1209,18 @@ footer p { font-size:11px; color:var(--text-faint); }
         </div>
         </div>
       </div>
-
-
+ 
+ 
       <!-- Contributions Row -->
       <div class="journey-row-wrap">
         <div class="journey-row-label-col label-contrib">
           <span class="journey-row-label-text">Contributions</span>
         </div>
         <div class="contrib-grid" id="contrib-section">
-
+ 
           <!-- hide old row labels -->
           <div class="contrib-row-label" style="display:none;"></div>
-
+ 
           <!-- Ambition contributions -->
           <div class="contrib-cell">
             <ul>
@@ -1207,19 +1257,19 @@ footer p { font-size:11px; color:var(--text-faint); }
               <li><span class="contrib-dot dot-contrib"></span>Evolve DD&T's own delivery roles to keep up with the pace of change</li>
             </ul>
           </div>
-
+ 
         </div>
       </div>
-
+ 
       <!-- Skills & Talent Row -->
       <div class="journey-row-wrap">
         <div class="journey-row-label-col label-skills">
           <span class="journey-row-label-text">Skills &amp; Talent</span>
         </div>
         <div class="contrib-grid" id="skills-section">
-
+ 
           <div class="contrib-row-label" style="display:none;"></div>
-
+ 
           <!-- Ambition skills -->
           <div class="contrib-cell">
             <ul>
@@ -1257,12 +1307,12 @@ footer p { font-size:11px; color:var(--text-faint); }
               <li><span class="contrib-dot dot-skills"></span>Ability to shape the next wave of ambition — the cycle begins again</li>
             </ul>
           </div>
-
+ 
         </div>
       </div>
-
+ 
       </div><!-- /journey-outer -->
-
+ 
       <!-- From → To Strip -->
       <div class="fromto-strip">
         <div class="fromto-header">
@@ -1270,45 +1320,45 @@ footer p { font-size:11px; color:var(--text-faint); }
           <div class="fromto-col-label from">DD&amp;T Today</div>
           <div class="fromto-col-label to">DD&amp;T at Scale</div>
         </div>
-
+ 
         <div class="fromto-row">
           <div class="fromto-row-label"><span class="fromto-row-label-text">Role</span></div>
           <div class="fromto-cell from">Responds to what the business needs</div>
           <div class="fromto-cell to">Shapes what's possible — and co-owns what gets built</div>
         </div>
-
+ 
         <div class="fromto-row">
           <div class="fromto-row-label"><span class="fromto-row-label-text">Decisions</span></div>
           <div class="fromto-cell from">Technology decisions follow business decisions</div>
           <div class="fromto-cell to">Data and AI decisions <em>are</em> business decisions — DD&amp;T holds the pen</div>
         </div>
-
+ 
         <div class="fromto-row">
           <div class="fromto-row-label"><span class="fromto-row-label-text">Partnership</span></div>
           <div class="fromto-cell from">Partnership means support — DD&amp;T enables what others decide</div>
           <div class="fromto-cell to">Partnership means accountability — DD&amp;T is answerable for outcomes</div>
         </div>
-
+ 
         <div class="fromto-row">
           <div class="fromto-row-label"><span class="fromto-row-label-text">Skills</span></div>
           <div class="fromto-cell from">Capabilities organised around platforms and tools</div>
           <div class="fromto-cell to">Capabilities organised around workflows, value, and the next wave of ambition</div>
         </div>
-
+ 
       </div><!-- /fromto-strip -->
-
-
-
+ 
+ 
+ 
     </div><!-- /journey-wrap -->
   </section>
-
+ 
   <footer>
     <p>Takeda R&D DD&T · AIDPA Working Session · Confidential</p>
     <span class="footer-conf">Working Draft · April 2026</span>
   </footer>
-
+ 
 </div>
-
+ 
 <script>
 function toggleCard(header) {
   const body = header.nextElementSibling;
@@ -1317,7 +1367,7 @@ function toggleCard(header) {
   body.classList.toggle('open', !isOpen);
   toggle.textContent = isOpen ? 'EXPAND ↓' : 'COLLAPSE ↑';
 }
-
+ 
 function toggleDim(header) {
   const body = header.nextElementSibling;
   const toggle = header.querySelector('.dim-card-toggle');
@@ -1325,18 +1375,18 @@ function toggleDim(header) {
   body.classList.toggle('open', !isOpen);
   toggle.textContent = isOpen ? 'EXPAND ↓' : 'COLLAPSE ↑';
 }
-
+ 
 function navTo(id) {
   document.getElementById(id).scrollIntoView({behavior:'smooth'});
 }
-
+ 
 function activatePhase(idx) {
   for (let i = 0; i < 4; i++) {
     const el = document.getElementById('ph' + i);
     if (el) el.classList.toggle('active-phase', i === idx);
   }
 }
-
+ 
 const sections = ['hero','s1','s2','s3'];
 const links = document.querySelectorAll('.sb-nav li a');
 window.addEventListener('scroll', function() {
@@ -1351,7 +1401,7 @@ window.addEventListener('scroll', function() {
     a.classList.toggle('active', id === cur);
   });
 });
-
+ 
 // ── RANKING ENGINE ──
 const DIMS = [
   { id: 0, label: 'Program Governance & Leadership Activation', short: 'Governance' },
@@ -1361,12 +1411,12 @@ const DIMS = [
   { id: 4, label: 'Workforce Transformation & Change', short: 'Workforce' },
   { id: 5, label: 'Solution Architecture & Delivery', short: 'Architecture' }
 ];
-
+ 
 const state = {
   nicole: { critical: [], confident: [] },
   sascha: { critical: [], confident: [] }
 };
-
+ 
 function buildSelectionGrid(containerId, person, type, limit) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
@@ -1389,13 +1439,13 @@ function buildSelectionGrid(containerId, person, type, limit) {
     container.appendChild(tile);
   });
 }
-
+ 
 function getBtnId(person, type) {
   if (person === 'nicole' && type === 'critical') return 'btn-step-1';
   if (person === 'sascha' && type === 'critical') return 'btn-step-2';
   return 'btn-step-3';
 }
-
+ 
 function toggleSelection(person, type, dimId, limit, containerId, btnId) {
   const arr = state[person][type];
   const idx = arr.indexOf(dimId);
@@ -1412,7 +1462,7 @@ function toggleSelection(person, type, dimId, limit, containerId, btnId) {
   // for step 3, check both
   if (type === 'confident') checkStep3Button();
 }
-
+ 
 function buildConfidenceGrids() {
   ['nicole','sascha'].forEach(person => {
     const containerId = `${person}-conf-grid`;
@@ -1435,12 +1485,12 @@ function buildConfidenceGrids() {
     });
   });
 }
-
+ 
 function checkStep3Button() {
   const btn = document.getElementById('btn-step-3');
   if (btn) btn.style.display = (state.nicole.confident.length === 2 && state.sascha.confident.length === 2) ? 'inline-block' : 'none';
 }
-
+ 
 function advanceStep(currentStep, person, type) {
   document.getElementById(`rank-step-${currentStep}`).style.display = 'none';
   const nextStep = currentStep + 1;
@@ -1450,7 +1500,7 @@ function advanceStep(currentStep, person, type) {
     document.getElementById(`step-dot-${i}`).style.background = i <= nextStep ? 'var(--accent)' : 'var(--border-hi)';
   }
   document.getElementById('step-label').textContent = `Step ${nextStep} of 3`;
-
+ 
   if (nextStep === 2) {
     buildSelectionGrid('sascha-critical-grid', 'sascha', 'critical', 2);
   }
@@ -1458,7 +1508,7 @@ function advanceStep(currentStep, person, type) {
     buildConfidenceGrids();
   }
 }
-
+ 
 function revealResults() {
   document.getElementById('rank-step-3').style.display = 'none';
   document.getElementById('rank-results').style.display = 'block';
@@ -1466,7 +1516,7 @@ function revealResults() {
   for (let i = 1; i <= 3; i++) {
     document.getElementById(`step-dot-${i}`).style.background = 'var(--accent)';
   }
-
+ 
   // Compute scores: critical = 2pts each person, confident = -1pt (gap indicator)
   const scores = DIMS.map(dim => {
     const nicoleCritical = state.nicole.critical.includes(dim.id) ? 1 : 0;
@@ -1478,10 +1528,10 @@ function revealResults() {
     const gap = criticalScore - confScore; // higher = bigger gap = discuss first
     return { dim, criticalScore, confScore, gap, nicoleCritical, saschaCritical, nicoleConf, saschaConf };
   });
-
+ 
   // Sort: highest gap first, then highest criticalScore
   scores.sort((a, b) => b.gap - a.gap || b.criticalScore - a.criticalScore);
-
+ 
   // Build results grid
   const grid = document.getElementById('results-grid');
   grid.innerHTML = '';
@@ -1509,7 +1559,7 @@ function revealResults() {
     `;
     grid.appendChild(tile);
   });
-
+ 
   // Alignment note
   const criticalAgreements = DIMS.filter(d => state.nicole.critical.includes(d.id) && state.sascha.critical.includes(d.id));
   const criticalDisagreements = DIMS.filter(d => state.nicole.critical.includes(d.id) !== state.sascha.critical.includes(d.id));
@@ -1524,11 +1574,11 @@ function revealResults() {
     }).join('; ')}.`;
   }
   document.getElementById('alignment-note').innerHTML = note || 'Selections recorded — ready to begin the discussion.';
-
+ 
   // Reorder and tag dimension cards
   reorderDimCards(scores);
 }
-
+ 
 function reorderDimCards(scores) {
   const container = document.getElementById('dim-cards-container');
   const cards = Array.from(container.querySelectorAll('.dim-card'));
@@ -1536,7 +1586,7 @@ function reorderDimCards(scores) {
   scores.forEach((s, rank) => {
     const card = cards.find(c => parseInt(c.dataset.dim) === s.dim.id);
     if (card) container.appendChild(card); // re-appends in order
-
+ 
     // update tag
     const tag = document.getElementById(`dim-tag-${s.dim.id}`);
     if (tag) {
@@ -1554,12 +1604,12 @@ function reorderDimCards(scores) {
     }
   });
 }
-
+ 
 function startDiscussion() {
   document.getElementById('dim-cards-container').style.display = 'flex';
   document.getElementById('dim-cards-container').scrollIntoView({behavior:'smooth', block:'start'});
 }
-
+ 
 // Initialise step 1
 window.addEventListener('DOMContentLoaded', () => {
   buildSelectionGrid('nicole-critical-grid', 'nicole', 'critical', 2);
